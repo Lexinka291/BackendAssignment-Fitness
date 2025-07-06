@@ -1,16 +1,40 @@
 import http from 'http'
 import express from 'express'
 
-import { sequelize } from './db'
+// import { sequelize } from './db'
+import {Sequelize} from "sequelize";
 import ProgramRouter from './routes/programs'
 import ExerciseRouter from './routes/exercises'
+import UserRouter from './routes/users'
+import TestRouter from './routes/test'
+import AdminRouter from './routes/admin'
+import * as dotenv from "dotenv";
+import passport from "passport"
+require('./config/passport')
+
+dotenv.config();
+
+
+export const sequelize = new Sequelize(
+  'postgresql://postgres:postgres@localhost:5432/fitness_app',
+  {
+    dialect: 'postgres',
+  }
+);
+
+// const auth = require('./middleware/auth');
 
 const app = express()
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(passport.initialize())
+// app.use(passport.session())
 app.use('/programs', ProgramRouter())
 app.use('/exercises', ExerciseRouter())
+app.use('/users', UserRouter())
+app.use('/admin', AdminRouter())
+app.use('/test', TestRouter());
 
 const httpServer = http.createServer(app)
 

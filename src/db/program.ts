@@ -39,6 +39,13 @@ export default (sequelize: Sequelize, modelName: string) => {
 			}
 		})
 	}
-
+	// ProgramModelCtor.associate = (models) => {
+	// 	ProgramModelCtor.belongsTo(models.User, {
+	// 		foreignKey: {
+	// 			name: 'programID',
+	// 			allowNull: false
+	// 		}
+	// 	})
+	// }
 	return ProgramModelCtor
 }
