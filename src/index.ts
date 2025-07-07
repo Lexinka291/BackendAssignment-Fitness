@@ -21,7 +21,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-const auth = require('./middleware/jwtAuth');
+const auth = require('./middlewares/jwtAuth');
 
 const app = express()
 

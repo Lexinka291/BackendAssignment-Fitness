@@ -6,10 +6,10 @@ import passport from "passport";
 const bcrypt = require("bcrypt");
 import jwt from 'jsonwebtoken'
 import * as passportLocal from "passport-local";
-import {authorizeRoles} from "../middleware/authRoles";
+import {authorizeRoles} from "../middlewares/authRoles";
 import {USER_ROLES} from "../utils/enums";
 import {compare} from "bcrypt";
-import { jwtAuth } from '../middleware/jwtAuth';
+import { jwtAuth } from '../middlewares/jwtAuth';
 
 
 const router = Router()
@@ -146,6 +146,28 @@ export default () => {
         }
     )
 
+
+    router.delete(
+        '/delete/:email',
+        async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
+            const email = req.params.email
+
+            try {
+                const count = await User.destroy({
+                    where: {email}
+                })
+
+                if (count > 0) {
+                    return res.json({message: `Deleted user ${email}`})
+                } else {
+                    return res.status(404).json({message: 'User not found'})
+                }
+            } catch (err) {
+                console.error(err)
+                return res.status(500).json({message: 'Error deleting user'})
+            }
+        }
+    )
 
     router.delete(
         '/delete/:email',
