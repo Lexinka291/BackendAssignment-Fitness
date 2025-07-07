@@ -60,15 +60,17 @@ export default (sequelize: Sequelize, modelName: string) => {
         }
     )
 
-    // UserModelCtor.associate = (models) => {
-    //     UserModelCtor.hasMany(models.Program, {
-    //         foreignKey: {
-    //             name: 'programID',
-    //             allowNull: false
-    //         },
-    //     })
-    // }
+    UserModelCtor.associate = (models) => {
+        UserModelCtor.hasMany(models.ExerciseTracker, {
+            foreignKey: {
+                name: "userID",
+                allowNull: false,
+            },
+            onDelete: 'CASCADE',
+        });
+
+    }
 
     return UserModelCtor
-}
+};
 

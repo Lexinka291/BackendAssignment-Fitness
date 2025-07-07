@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize'
 import { ProgramModel } from './program'
+import { ExerciseTrackerModel } from './exerciseTracker'
 
 import { EXERCISE_DIFFICULTY } from '../utils/enums'
 
@@ -9,6 +10,8 @@ export interface ExerciseModel extends Model {
 	name: String
 
 	program: ProgramModel
+    exerciseCompletions?: ExerciseTrackerModel[]
+
 }
 
 export default (sequelize: Sequelize, modelName: string) => {
@@ -43,6 +46,14 @@ export default (sequelize: Sequelize, modelName: string) => {
 			},
 		})
 	}
+    ExerciseModelCtor.associate =(models) =>{
+        ExerciseModelCtor.hasMany(models.ExerciseTracker, {
+        foreignKey: {
+            name: 'exerciseID',
+            allowNull: false,
+        },
+    })
+}
 
 	return ExerciseModelCtor
 }

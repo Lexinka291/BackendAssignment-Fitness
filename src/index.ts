@@ -8,6 +8,7 @@ import ExerciseRouter from './routes/exercises'
 import UserRouter from './routes/users'
 import TestRouter from './routes/test'
 import AdminRouter from './routes/admin'
+import TrackerRouter from './routes/tracker'
 import * as dotenv from "dotenv"
 import passport from './config/passport'
 
@@ -34,6 +35,7 @@ app.use('/exercises', ExerciseRouter())
 app.use('/users', UserRouter())
 app.use('/admin', AdminRouter())
 app.use('/test', TestRouter());
+app.use('/tracker', TrackerRouter());
 
 const httpServer = http.createServer(app)
 
