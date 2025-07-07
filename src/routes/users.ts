@@ -1,6 +1,8 @@
 ﻿import {Router} from 'express'
 import * as userController from "../controllers/userController";
 import {jwtAuth} from "../middlewares/jwtAuth";
+import {authorizeRoles} from "../middlewares/authRoles";
+import {USER_ROLES} from "../utils/enums";
 
 const router = Router()
 
@@ -14,7 +16,7 @@ export default () => {
     router.post('/login', userController.login)
 
     // Get all users
-    router.get('/', jwtAuth(), userController.getUsers);
+    router.get('/', jwtAuth(),authorizeRoles(USER_ROLES.ADMIN,USER_ROLES.USER), userController.getPublicUsersInfo);
 
     return router
 }

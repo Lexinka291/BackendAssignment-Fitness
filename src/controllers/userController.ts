@@ -1,12 +1,26 @@
-﻿import {Router, Request, Response, NextFunction} from 'express'
+﻿import {Request, Response, NextFunction} from 'express'
+import jwt from 'jsonwebtoken'
 
 import {models} from '../db'
 import bcrypt from "bcrypt";
+
 
 const {
     User
 } = models
 
+export const getPublicUsersInfo
+    = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
+    console.log("Route handler running...");
+    // Get id and nickname
+    const users = await User.findAll({
+        attributes: ["id", "nickName"],
+    });
+    res.json({
+        data: users,
+        message: "List of public user info",
+    })
+}
 
 export const getUsers
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
@@ -17,6 +31,23 @@ export const getUsers
         message: "List of users",
     });
 }
+export const getUserByID =
+    async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
+        const {id} = req.params;
+        console.log(id)
+        console.log("Route handler running...");
+        try {
+            const user = await User.findByPk(id);
+            if (!user) {
+                return res.status(404).json({message: "User not found"});
+            }
+
+            res.json(user);
+        } catch (err: any) {
+            console.error(err);
+            res.status(500).json({message: "Error fetching user", error: err.message});
+        }
+    };
 
 
 export const register
@@ -100,8 +131,23 @@ export const login
     }
 };
 
+export const deleteUserByID
+    = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
+    const id = req.params.id
+    try {
+        const count = await User.destroy({
+            where: {id}
+        })
 
-import jwt from 'jsonwebtoken'
-import * as passportLocal from "passport-local";
-import {authorizeRoles} from "../middlewares/authRoles"
-import {USER_ROLES} from "../utils/enums"
+        if (count > 0) {
+            return res.json({message: `Deleted user ${id}`})
+        } else {
+            return res.status(404).json({message: 'User not found'})
+        }
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({message: 'Error deleting user'})
+    }
+}
+
+
