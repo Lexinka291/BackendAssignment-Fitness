@@ -18,5 +18,8 @@ export default () => {
     // Get all users
     router.get('/', jwtAuth(),authorizeRoles(USER_ROLES.ADMIN,USER_ROLES.USER), userController.getPublicUsersInfo);
 
+    // Get profile
+    router.get('/profile', jwtAuth(),authorizeRoles(USER_ROLES.ADMIN,USER_ROLES.USER), userController.getProfile);
+
     return router
 }

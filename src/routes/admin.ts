@@ -10,7 +10,7 @@ import { jwtAuth } from '../middlewares/jwtAuth';
 import * as userController from "../controllers/userController";
 import * as exerciseController from "../controllers/exerciseController";
 import {deleteExercise} from "../controllers/exerciseController";
-import {deleteUserByID} from "../controllers/userController";
+import {deleteUserByID, updateUserByID} from "../controllers/userController";
 
 
 const router = Router()
@@ -44,6 +44,13 @@ export default () => {
         userController.deleteUserByID
     )
 
+    // Update user by ID
+    router.put(
+        '/users/:id',
+        jwtAuth(),
+        authorizeRoles(USER_ROLES.ADMIN),
+        userController.updateUserByID
+    )
 
     // -------- EXERCISES ---------
     // Create new exercise or if exists - update it

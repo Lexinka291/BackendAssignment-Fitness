@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import {models} from '../db'
 import bcrypt from "bcrypt";
+import {UserModel} from "../db/user";
 
 
 const {
@@ -34,22 +35,98 @@ export const getUsers
 export const getUserByID =
     async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
         const {id} = req.params;
-        console.log(id)
-        console.log("Route handler running...");
         try {
             const user = await User.findByPk(id);
             if (!user) {
                 return res.status(404).json({message: "User not found"});
             }
-
-            res.json(user);
-        } catch (err: any) {
+            const profileData = GetUserDetails(user)
+            res.json({
+                data: profileData,
+                message: `Getting user ${user.id}`,
+            });        } catch (err: any) {
             console.error(err);
             res.status(500).json({message: "Error fetching user", error: err.message});
         }
     };
 
+function GetUserDetails(user: UserModel) {
+    {
+        const profileData= {
+            name: user.name,
+            surname: user.surname,
+            nickName: user.nickName,
+            age: user.age,
+        }
+        return profileData;
+    }
+}
 
+export const getProfile
+    = async (req: any, res: Response, _next: NextFunction): Promise<any> => {
+    try {
+
+    const userID = (req.user as any).id;
+    const user = await User.findByPk(userID);
+    if (!user) {
+        return res.status(404).json({message: "User not found'})"})
+    }
+    const profileData = GetUserDetails(user)
+    res.json({
+        data: profileData,
+        message: "Profile data of logged user",
+    });
+    } catch (err: any) {
+        console.error(err);
+        return res
+            .json({message: "Error getting user profile", error: err.message});
+    }}
+export const updateUserByID
+    = async (req: any, res: Response, _next: NextFunction): Promise<any> => {
+    async function GetReqBodyUpdates() {
+        const updates: any = {};
+
+        const allowedFields = [
+            "name",
+            "surname",
+            "nickName",
+            "email",
+            "age",
+            "role"
+        ];
+
+        for (const field of allowedFields) {
+            if (req.body[field] !== undefined) {
+                updates[field] = req.body[field];
+            }
+        }
+        return updates;
+    }
+    try {
+        const {id} = req.params;
+        const user = await User.findByPk(id);
+        if (!user) {
+            return res.status(404).json({message: "User not found'})"})
+        }
+        // Check the parameters to updates send by user
+        const updates = await GetReqBodyUpdates()
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({
+                message: "No fields provided to update"
+            });
+        }
+        // Perform the update
+        await user.update(updates);
+
+        res.json({
+            data: user,
+            message: `Updated user ${id} data`,
+        });
+    } catch (err: any) {
+        console.error(err);
+        return res
+            .json({message: "Error updating user", error: err.message});
+    }}
 export const register
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
     const {name, surname, nickName, email, password, age, role} = req.body;
