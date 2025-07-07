@@ -8,9 +8,8 @@ import ExerciseRouter from './routes/exercises'
 import UserRouter from './routes/users'
 import TestRouter from './routes/test'
 import AdminRouter from './routes/admin'
-import * as dotenv from "dotenv";
-import passport from "passport"
-require('./config/passport')
+import * as dotenv from "dotenv"
+import passport from './config/passport'
 
 dotenv.config();
 
@@ -22,7 +21,7 @@ export const sequelize = new Sequelize(
   }
 );
 
-// const auth = require('./middleware/auth');
+const auth = require('./middleware/jwtAuth');
 
 const app = express()
 

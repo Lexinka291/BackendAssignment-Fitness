@@ -6,8 +6,8 @@ import passport from "passport";
 const bcrypt = require("bcrypt");
 import jwt from 'jsonwebtoken'
 import * as passportLocal from "passport-local";
-import {authorizeRoles} from "../middleware/authRoles";
-import {USER_ROLES} from "../utils/enums";
+import {authorizeRoles} from "../middleware/authRoles"
+import {USER_ROLES} from "../utils/enums"
 
 
 const router = Router()
@@ -19,7 +19,8 @@ const {
 export default () => {
 
 
-    router.post('/register', async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
+    router.post('/register',
+        async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
         const {name, surname, nickName, email, password, age, role} = req.body
 
         try {
@@ -61,50 +62,60 @@ export default () => {
         }
     })
 
-    router.post('/login', (req: Request, res: Response, next: NextFunction) => {
-        passport.authenticate('local', {session: false}, (err: any, user: any, info: any) => {
-                if (err) {
-                    console.error(err)
-                    return res.status(500).json({message: 'Internal server error'})
-                }
+    router.post(
+        '/login',
+        async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const { email, password } = req.body
+
+                const user = await User.findOne({ where: { email } })
                 if (!user) {
-                    return res.status(401).json({
-                        message: info?.message || 'Authentication failed'
-                    })
-                }
-                const payload = {
-                    id: user.id,
-                    email: user.email,
-                    role: user.role
+                     res.status(401).json({ message: 'Invalid credentials' })
                 }
 
-                // Sign JWT
-                const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-                    expiresIn: '1h'
-                })
-            // Return token and user info
-                return res.json({
-                    message: "Login successful",
-                    token,
-                    user: {
+                const match = await bcrypt.compare(password, user.password)
+                if (!match) {
+                     res.status(401).json({ message: 'Invalid credentials' })
+                }
+
+                const token = jwt.sign(
+                    {
                         id: user.id,
                         email: user.email,
-                        nickName: user.nickName,
                         role: user.role
                     },
-                    redirectUrl: user.role === "ADMIN" ? "/adminpanel" : "/dashboard",
-                })
+                    "secret",
+                    { expiresIn: '1h' }
+                )
+
+                 res.json({ token })
+            } catch (err) {
+                console.error(err)
+                next(err)
             }
-        )
-        (req, res, next)
-    })
+        }
+    )
 
 
     router.get(
         '/',
-        passport.authenticate("jwt", { session: false }),
-        authorizeRoles(USER_ROLES.ADMIN),
+        (req, res, next) => {
+            passport.authenticate("jwt", { session: false }, (err:any, user:any, info:any) => {
+                if (err) {
+                    console.error("Passport error:", err);
+                    return res.status(500).json({ message: "Internal server error." });
+                }
+                if (!user) {
+                    console.log("JWT auth failed:", info);
+                    return res.status(401).json({ message: "Unauthorized." });
+                }
+                console.log("JWT auth success:", user);
+                req.user = user;
+                next();
+            })(req, res, next);
+        },
         async (req, res) => {
+            console.log("Route handler running...");
             const users = await User.findAll();
             res.json({
                 data: users,
@@ -112,7 +123,6 @@ export default () => {
             });
         }
     );
-
     router.delete(
         '/delete/:email',
         async (req: Request, res: Response, _next: NextFunction): Promise<any> => {

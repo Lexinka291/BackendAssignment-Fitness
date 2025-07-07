@@ -3,6 +3,7 @@
 
 export const authorizeRoles = (...allowedRoles: string[]) => {
     return (req: Request, res: Response, next: NextFunction): void => {
+        console.log("User in request:");
         const user = req.user as any;
         console.log("User in request:", user);
         console.log("Allowed roles:", allowedRoles);
@@ -10,9 +11,7 @@ export const authorizeRoles = (...allowedRoles: string[]) => {
             res.status(403).json({
                 message: "Forbidden: you do not have permission for this resource",
             });
-            return;
         }
-
         next();
     };
 };

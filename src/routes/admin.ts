@@ -9,6 +9,7 @@ import * as passportLocal from "passport-local";
 import {authorizeRoles} from "../middleware/authRoles";
 import {USER_ROLES} from "../utils/enums";
 import {compare} from "bcrypt";
+import { jwtAuth } from '../middleware/jwtAuth';
 
 
 const router = Router()
@@ -21,21 +22,36 @@ const {
 
 export default () => {
 
+    // router.get(
+    //     '/users',
+    //     passport.authenticate("jwt", {session: false}),
+    //     authorizeRoles("ADMIN"),
+    //      (req:any, res:any) => {
+    //         console.log(req)
+    //         const users =  User.findAll();
+    //         console.log(users)
+    //         res.json({
+    //             data: users,
+    //             message: "List of users",
+    //         });
+    //     }
+    // );
     router.get(
         '/users',
-        passport.authenticate("jwt", {session: false}),
-        authorizeRoles(USER_ROLES.ADMIN),
-        async (req, res) => {
-            const users = await User.findAll();
-            res.json({
-                data: users,
-                message: "List of users",
-            });
+        passport.authenticate("jwt", { session: false }),
+        (req, res, next) => {
+            try {
+                res.json({ message: 'You are authorized!' });
+            } catch (e) {
+                console.error(e);
+                next(e);
+            }
         }
     );
+
     router.post(
         '/exerciseAdd',
-        passport.authenticate('jwt', {session: false}),
+        jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         async (req, res) => {
             try {
