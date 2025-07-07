@@ -107,11 +107,15 @@ export default () => {
     // Add exercise to the program
     router.post(
         "/programs/:id/add",
+        jwtAuth(),
+        authorizeRoles(USER_ROLES.ADMIN),
         programController.addExerciseToProgram
     );
     // Delete exercise from the program
     router.delete(
         "/programs/:programId/delete/:exerciseId",
+        jwtAuth(),
+        authorizeRoles(USER_ROLES.ADMIN),
         programController.deleteExercise
     );
     return router
