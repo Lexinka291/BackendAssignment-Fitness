@@ -451,13 +451,13 @@ Create new program.
 - **Roles allowed:** ADMIN
 - 
 #### Example Body
-```
+```json
 {
     "name": "New Program"
 }
 ```
 #### Example Response
-```
+```json
 {
     "data": {
         "id": "6",
@@ -516,14 +516,14 @@ Add tracked exercise with current time.
 - **Auth:** Yes
 - **Roles allowed:** ADMIN, USER
 - #### Example Body
-```
+```json
 {
     "exerciseID" : 1,
     "durationSeconds": 45
 }
 ```
 #### Example response
-```
+```json
 {
     "data": {
         "id": "6",
