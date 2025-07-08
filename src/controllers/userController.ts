@@ -6,6 +6,9 @@ import bcrypt from "bcrypt";
 import {UserModel} from "../db/user";
 import {getLocalizedMessage} from "../utils/localize";
 
+import * as dotenv from "dotenv"
+dotenv.config();
+
 
 const {
     User,
@@ -239,7 +242,7 @@ export const login
                 email: user.email,
                 role: user.role
             },
-            "secret",
+            process.env.JWT_SECRET,
             {expiresIn: '1h'}
         )
 
