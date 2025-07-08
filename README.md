@@ -332,23 +332,23 @@ Get a list of public user info.
 
 ### GET `/users/profile`
 
-Get profile info of the logged-in user.
+Get profile info and tracked exercises of the logged-in user.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN, USER
-
+  
 ---
+## ADMIN API - USERS 
+### GET `admin/users/`
 
-### GET `/users/users`
-
-List all users (admin only).
+Get list of all users detailed info.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN
 
 ---
 
-### GET `/users/users/:id`
+### GET `admin/users/:id`
 
 Get user by ID.
 
@@ -357,7 +357,7 @@ Get user by ID.
 
 ---
 
-### PUT `/users/users/:id`
+### PUT `/admin/users/:id`
 
 Update user by ID.
 
@@ -366,7 +366,7 @@ Update user by ID.
 
 ---
 
-### DELETE `/users/delete/:id`
+### DELETE `/admin/delete/:id`
 
 Delete user by ID.
 
@@ -375,24 +375,9 @@ Delete user by ID.
 
 ---
 
-## EXERCISES API
+## ADMIN API - EXERCISES 
 
-### GET `/exercises`
-
-Get paginated list of exercises.
-
-Supports:
-
-- Pagination: `?page=1&limit=10`
-- Filter by Program: `?programID=1`
-- Search (case-insensitive): `?search=cis`
-
-- **Auth:** Yes
-- **Roles allowed:** ADMIN, USER
-
----
-
-### POST `/exercises/add`
+### POST `admin/exercises/add`
 
 Create or update exercise.
 
@@ -411,7 +396,7 @@ Create or update exercise.
 
 ---
 
-### PUT `/exercises/:id`
+### PUT `admin/exercises/:id`
 
 Update exercise by ID.
 
@@ -420,16 +405,16 @@ Update exercise by ID.
 
 ---
 
-### POST `/exercises/:id`
+### POST `admin/exercises/:id`
 
-Show exercise by ID.
+Get exercise by ID.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN
 
 ---
 
-### POST `/exercises/delete/:id`
+### POST `admin/exercises/delete/:id`
 
 Delete exercise by ID.
 
@@ -438,9 +423,9 @@ Delete exercise by ID.
 
 ---
 
-## PROGRAMS API
+## ADMIN API - PROGRAMS 
 
-### GET `/programs`
+### GET `admin/programs`
 
 List all programs.
 
@@ -449,7 +434,7 @@ List all programs.
 
 ---
 
-### GET `/programs/:id`
+### GET `admin/programs/:id`
 
 Get program details (and exercises).
 
@@ -458,7 +443,7 @@ Get program details (and exercises).
 
 ---
 
-### POST `/programs/add`
+### POST `admin/programs/add`
 
 Create new program.
 
@@ -467,7 +452,7 @@ Create new program.
 
 ---
 
-### DELETE `/programs/delete/:id`
+### DELETE `admin/programs/delete/:id`
 
 Delete program (and its exercises).
 
@@ -476,9 +461,9 @@ Delete program (and its exercises).
 
 ---
 
-### POST `/programs/:id/add`
+### POST `admin/programs/:id/add`
 
-Add exercise to program.
+Add exercise to program with specific id.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN
@@ -487,7 +472,7 @@ Add exercise to program.
 
 ### DELETE `/programs/:programId/delete/:exerciseId`
 
-Remove exercise from program.
+Remove specific exercise from program.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN
@@ -507,16 +492,52 @@ List tracked exercises.
 
 ### POST `/tracker/add`
 
-Add tracked exercise.
+Add tracked exercise with current time.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN, USER
-
+- #### Example Body
+```
+{
+    "exerciseID" : 1,
+    "durationSeconds": 45
+}
+```
+#### Example response
+```
+{
+    "data": {
+        "id": "6",
+        "userID": "6",
+        "exerciseID": "1",
+        "completedAt": "2025-07-08T21:30:09.523Z",
+        "durationSeconds": 45,
+        "updatedAt": "2025-07-08T21:30:09.531Z",
+        "createdAt": "2025-07-08T21:30:09.531Z",
+        "deletedAt": null
+    },
+    "message": "Exercise tracking created successfully"
+}
+```
 ---
 
 ### DELETE `/tracker/delete/:id`
 
 Delete tracked exercise by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
+
+---
+### GET `/exercises`
+
+Get paginated list of exercises.
+
+Supports:
+
+- Pagination: `?page=1&limit=10`
+- Filter by Program: `?programID=1`
+- Search (case-insensitive): `?search=cis`
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN, USER
