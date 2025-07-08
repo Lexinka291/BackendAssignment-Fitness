@@ -179,9 +179,9 @@ response status code >= 500
 - passport-local
 
 ### Structure
-`
+```
 src/
-├── <span style="color:green">config/
+├──>config/
 │ └── passport.ts
 ├── controllers/
 │ ├── exerciseController.ts
@@ -215,7 +215,8 @@ src/
 ├── utils/
 │ ├── enums.ts
 │ ├──<span style="color:green"> localize.ts</span>
-│ └── index.ts `
+│ └── index.ts 
+```
 ---
 ### Pagination
 
