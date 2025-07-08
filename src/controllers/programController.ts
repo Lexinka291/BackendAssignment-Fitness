@@ -1,6 +1,7 @@
 ﻿import {Request, Response, NextFunction} from 'express'
 
 import {models} from '../db'
+import {getLocalizedMessage} from "../utils/localize";
 
 
 
@@ -20,7 +21,7 @@ export const createProgram =
 
             res.status(201).json({
                 data: program,
-                message: 'Program created successfully',
+                message: getLocalizedMessage(req, "programCreated"),
             });
         } catch (err) {
             _next(err)
@@ -34,7 +35,9 @@ export const deleteProgram
         // Check if program exists
         const program = await Program.findByPk(id);
         if (!program) {
-            return res.status(404).json({ message: `Program ${id} not found`  });
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "programNotFound"),
+            });
         }
         // Delete all exercises
         await Exercise.destroy({
@@ -45,7 +48,9 @@ export const deleteProgram
             where: { id }
         });
 
-        res.json({message: `Program ${id} deleted`});
+        res.json({
+            message: getLocalizedMessage(req, "programDeleted"),
+        });
     } catch (err) {
         _next(err)
     }
@@ -57,7 +62,7 @@ export const getAllPrograms
 
         res.status(201).json({
             data: program,
-            message: 'List of programs',
+            message: getLocalizedMessage(req, "programsList"),
         });
     } catch (err) {
         _next(err)
@@ -70,7 +75,9 @@ export const getProgramByID
     try {
         const program = await Program.findByPk(id);
         if (!program) {
-            return res.status(404).json({ message: "Program not found" });
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "programNotFound"),
+            });
         }
         const listOfExercises = await Exercise.findAll(
             {
@@ -81,7 +88,7 @@ export const getProgramByID
         const data = {ProgramData: program, ExerciseData: listOfExercises}
         res.status(201).json({
             data: data,
-            message: 'Program created successfully',
+            message: getLocalizedMessage(req, "programCreated"),
         });
     } catch (err) {
         _next(err)
@@ -103,7 +110,7 @@ export const addExerciseToProgram
 
         res.status(201).json({
             data: newExercise,
-            message: `Exercise added to program ${id}`
+            message: getLocalizedMessage(req, "exerciseCreated"),
         });
     } catch (err) {
         _next(err)
@@ -122,13 +129,13 @@ export const deleteExercise
 
         if (!exercise) {
             return res.status(404).json({
-                message: "Exercise not found in this program"
+                message: getLocalizedMessage(req, "exerciseNotFound"),
             });
         }
 
         await exercise.destroy();
         res.json({
-            message: `Exercise ${exerciseId} deleted from program ${programId}`
+            message: getLocalizedMessage(req, "exerciseDeleted"),
         });
     } catch (err) {
         _next(err)

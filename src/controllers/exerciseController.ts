@@ -1,6 +1,7 @@
 ﻿import {Request, Response, NextFunction} from 'express'
 
 import {models} from '../db'
+import {getLocalizedMessage} from "../utils/localize";
 
 const {
     Program,
@@ -16,7 +17,7 @@ export const createOrUpdateExercise =
             const program = await Program.findByPk(programID);
             if (!program) {
                 return res.status(400).json({
-                    message: 'Program not found.',
+                    message: getLocalizedMessage(req, "programNotFound"),
                 });
             }
 
@@ -37,7 +38,7 @@ export const createOrUpdateExercise =
                 });
 
                 return res.json({
-                    message: "Exercise difficulty updated",
+                    message: getLocalizedMessage(req, "exerciseDifficultyUpdated"),
                     existingExercise,
                 });
             }
@@ -50,7 +51,7 @@ export const createOrUpdateExercise =
 
             res.status(201).json({
                 data: exercise,
-                message: 'Exercise created successfully',
+                message: getLocalizedMessage(req, "exerciseCreated"),
             });
         } catch (err) {
             _next(err)
@@ -65,7 +66,7 @@ export const updateExercise =
         try {
             const exercise = await Exercise.findByPk(id);
             if (!exercise) {
-                return res.status(404).json({ message: "Exercise not found" });
+                return res.status(404).json({ message: getLocalizedMessage(req, "exerciseNotFound") });
             }
 
             await exercise.update({ name ,difficulty, programID});
@@ -82,7 +83,7 @@ export const deleteExercise
     try {
         const count = await Exercise.destroy({where: {id}});
         if (count === 0) {
-            return res.status(404).json({message: "Exercise not found"});
+            return res.status(404).json({ message: getLocalizedMessage(req, "exerciseNotFound") });
         }
         res.json({message: `Exercise ${id} deleted`});
     } catch (err) {
@@ -96,7 +97,7 @@ export const showExercise
     try {
         const exercise = await Exercise.findByPk(id);
         if (!exercise) {
-            return res.status(404).json({ message: "Exercise not found" });
+            return res.status(404).json({ message: getLocalizedMessage(req, "exerciseNotFound") });
         }
         res.json(exercise);
     } catch (err) {

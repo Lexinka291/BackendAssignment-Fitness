@@ -1,10 +1,10 @@
 ﻿import {Request, Response, NextFunction} from 'express'
 import jwt from 'jsonwebtoken'
-import { query, validationResult } from "express-validator";
 
 import {models} from '../db'
 import bcrypt from "bcrypt";
 import {UserModel} from "../db/user";
+import {getLocalizedMessage} from "../utils/localize";
 
 
 const {
@@ -22,7 +22,7 @@ export const getPublicUsersInfo
     });
     res.json({
         data: users,
-        message: "List of public user info",
+        message: getLocalizedMessage(req, "publicUserList")
     })
 }
 
@@ -31,7 +31,7 @@ export const getUsers
     const users = await User.findAll();
     res.json({
         data: users,
-        message: "List of users",
+        message: getLocalizedMessage(req, "userList")
     });
 }
 export const getUserByID =
@@ -40,12 +40,14 @@ export const getUserByID =
         try {
             const user = await User.findByPk(id);
             if (!user) {
-                return res.status(404).json({message: "User not found"});
+                return res.status(404).json({
+                    message: getLocalizedMessage(req, "userNotFound"),
+                });
             }
             const profileData = GetUserDetails(user)
             res.json({
                 data: profileData,
-                message: `Getting user ${user.id}`,
+                message: getLocalizedMessage(req, "userFound") + `: ${id}`,
             });        }
         catch (err) {
             _next(err);
@@ -74,7 +76,9 @@ export const getProfile
         const user = await User.findByPk(userID);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "userNotFound"),
+            });
         }
 
         const profileData = GetUserDetails(user);
@@ -112,7 +116,7 @@ export const getProfile
                 profileData,
                 completedExercises
             },
-            message: "Profile data of logged user"
+            message: getLocalizedMessage(req, "profileData")
         });
     } catch (err) {
         _next(err);
@@ -144,13 +148,15 @@ export const updateUserByID
         const {id} = req.params;
         const user = await User.findByPk(id);
         if (!user) {
-            return res.status(404).json({message: "User not found'})"})
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "userNotFound"),
+            })
         }
         // Check the parameters to updates send by user
         const updates = await GetReqBodyUpdates()
         if (Object.keys(updates).length === 0) {
             return res.status(400).json({
-                message: "No fields provided to update"
+                message: getLocalizedMessage(req, "noFieldsToUpdate")
             });
         }
         // Perform the update
@@ -158,7 +164,7 @@ export const updateUserByID
 
         res.json({
             data: user,
-            message: `Updated user ${id} data`,
+            message: getLocalizedMessage(req, "userUpdated") + `: ${id}`,
         });
     } catch (err) {
         _next(err);
@@ -173,14 +179,14 @@ export const register
         if (user) {
             return res
                 .status(400)
-                .json({message: `User with the same nickname already exists`});
+                .json({ message: getLocalizedMessage(req, "userExistsNickname")});
         }
 
         user = await User.findOne({where: {email}});
         if (user) {
             return res
                 .status(400)
-                .json({message: `User with the same email already exists`});
+                .json({message: getLocalizedMessage(req, "userExistsEmail")});
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -195,15 +201,17 @@ export const register
             age,
             role,
         });
-
         return res.status(201).json({
-            id: newUser.id,
-            name: newUser.name,
-            surname: newUser.surname,
-            nickName: newUser.nickName,
-            email: newUser.email,
-            age: newUser.age,
-            role: newUser.role,
+            data: {
+                id: newUser.id,
+                name: newUser.name,
+                surname: newUser.surname,
+                nickName: newUser.nickName,
+                email: newUser.email,
+                age: newUser.age,
+                role: newUser.role,
+            },
+            message: getLocalizedMessage(req, "userCreated")
         });
     } catch (err) {
         _next(err);
@@ -217,12 +225,12 @@ export const login
 
         const user = await User.findOne({where: {email}})
         if (!user) {
-            return res.status(401).json({message: 'Invalid credentials'})
+            return res.status(401).json({message: getLocalizedMessage(req, "invalidCredentials")})
         }
 
         const match = await bcrypt.compare(password, user.password)
         if (!match) {
-            return res.status(401).json({message: 'Invalid credentials'})
+            return res.status(401).json({message: getLocalizedMessage(req, "invalidCredentials")})
         }
 
         const token = jwt.sign(
@@ -252,7 +260,9 @@ export const deleteUserByID
         if (count > 0) {
             return res.json({message: `Deleted user ${id}`})
         } else {
-            return res.status(404).json({message: 'User not found'})
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "userNotFound"),
+            })
         }
     } catch (err) {
         _next(err);

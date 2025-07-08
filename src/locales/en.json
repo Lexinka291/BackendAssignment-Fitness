@@ -1,0 +1,31 @@
+﻿{
+  "somethingWentWrong": "Something went wrong",
+  "userNotFound": "User not found",
+  "userFound": "User found",
+  "userUpdated": "User updated successfully",
+  "userDeleted": "User deleted successfully",
+  "userCreated": "User created successfully",
+  "profileData": "Profile data of logged user",
+  "publicUserList": "List of public user info",
+  "userList": "List of users",
+  "invalidCredentials": "Invalid credentials",
+  "userExistsNickname": "User with the same nickname already exists",
+  "userExistsEmail": "User with the same email already exists",
+  "noFieldsToUpdate": "No fields provided to update",
+
+  "programNotFound": "Program not found",
+  "programCreated": "Program created successfully",
+  "programDeleted": "Program deleted successfully",
+  "programsList": "List of programs",
+  "exerciseCreated": "Exercise created successfully",
+  "exerciseDeleted": "Exercise deleted successfully",
+  "exerciseDifficultyUpdated":"Exercise difficulty updated",
+  "exerciseNotFound": "Exercise not found",
+  "exerciseList": "List of exercises",
+
+  "exerciseTrackingsNotFound": "No exercise trackings found for this user",
+  "listOfUserTrackings": "List of user's tracked exercises",
+  "trackingCreatedSuccessfully": "Exercise tracking created successfully",
+  "trackNotFound": "Tracking record not found",
+  "trackDeleted": "Tracking deleted for user"
+}

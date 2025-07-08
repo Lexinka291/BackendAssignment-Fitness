@@ -1,0 +1,31 @@
+﻿{
+  "somethingWentWrong": "Niečo sa pokazilo",
+  "userNotFound": "Používateľ nebol nájdený",
+  "userFound": "Používateľ bol nájdený",
+  "userUpdated": "Používateľ bol úspešne aktualizovaný",
+  "userDeleted": "Používateľ bol úspešne odstránený",
+  "userCreated": "Používateľ bol úspešne vytvorený",
+  "profileData": "Profilové údaje prihláseného používateľa",
+  "publicUserList": "Zoznam verejných informácií o používateľoch",
+  "userList": "Zoznam používateľov",
+  "invalidCredentials": "Neplatné prihlasovacie údaje",
+  "userExistsNickname": "Používateľ s rovnakou prezývkou už existuje",
+  "userExistsEmail": "Používateľ s rovnakým e-mailom už existuje",
+  "noFieldsToUpdate": "Neboli zadané žiadne údaje na aktualizáciu",
+
+  "programNotFound": "Program nebol nájdený",
+  "programCreated": "Program bol úspešne vytvorený",
+  "programDeleted": "Program bol úspešne odstránený",
+  "programsList": "Zoznam programov",
+  "exerciseCreated": "Cvičenie bolo úspešne vytvorené",
+  "exerciseDeleted": "Cvičenie bolo úspešne odstránené",
+  "exerciseDifficultyUpdated": "Náročnosť cvičenia bola aktualizovaná",
+  "exerciseNotFound": "Cvičenie nebolo nájdené",
+  "exerciseList": "Zoznam cvičení",
+
+  "exerciseTrackingsNotFound": "Pre tohto používateľa neboli nájdené žiadne záznamy o cvičení",
+  "listOfUserTrackings": "Zoznam zaznamenaných cvičení používateľa",
+  "trackingCreatedSuccessfully": "Záznam o cvičení bol úspešne vytvorený",
+  "trackNotFound": "Záznam o cvičení nebol nájdený",
+  "trackDeleted": "Záznam o cvičení bol odstránený pre používateľa"
+}

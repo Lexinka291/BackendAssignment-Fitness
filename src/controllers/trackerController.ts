@@ -1,12 +1,11 @@
 ﻿import {Request, Response, NextFunction} from 'express'
 
 import {models} from '../db'
+import {getLocalizedMessage} from "../utils/localize";
 
 const {
     User,
     ExerciseTracker,
-    Program,
-    Exercise
 } = models
 
 export const getTrackedExercises
@@ -15,7 +14,9 @@ export const getTrackedExercises
         const userID = (req.user as any).id;
         const user = await User.findByPk(userID);
         if (!user) {
-            return res.status(404).json({message: `User Not Found`});
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "userNotFound")
+            });
         }
         console.log(user);
 
@@ -27,11 +28,13 @@ export const getTrackedExercises
                 }
             })
         if (!listOfTrackings) {
-            return res.status(404).json({message: `Exercise Trackings Not Found`});
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "exerciseTrackingsNotFound")
+            });
         }
         res.json({
             data: listOfTrackings,
-            message: "List of public user info",
+            message: getLocalizedMessage(req, "listOfUserTrackings"),
         })
     } catch (err) {
         _next(err)
@@ -43,12 +46,13 @@ export const addTracking
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
     try {
         const userID = (req.user as any).id;
-        console.log(userID);
         const {exerciseID, durationSeconds} = req.body;
 
         const user = await User.findByPk(userID);
         if (!user) {
-            return res.status(404).json({message: `User Not Found`});
+            return res.status(404).json({
+                message: getLocalizedMessage(req, "userNotFound"),
+            });
         }
 
         let completedAt = new Date()
@@ -61,8 +65,7 @@ export const addTracking
 
         res.status(201).json({
             data: program,
-            message: 'Tracking created successfully',
-        });
+            message: getLocalizedMessage(req, "trackingCreatedSuccessfully"),        });
     } catch (err) {
         _next(err)
     }
@@ -74,7 +77,9 @@ export const addTracking
             const {id} = req.params;
             const user = await User.findByPk(userID);
             if (!user) {
-                return res.status(404).json({message: `User Not Found`});
+                return res.status(404).json({
+                        message: getLocalizedMessage(req, "trackNotFound"),
+                });
             }
             const track = await  ExerciseTracker.findOne({where: {id:id}});
             if (!track) {
@@ -82,7 +87,7 @@ export const addTracking
             }
             await track.destroy();
             res.json({
-                message: `Track ${id} deleted from user ${userID}`
+                message: getLocalizedMessage(req, "trackDeleted")
             });
 
         } catch (err) {
