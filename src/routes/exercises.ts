@@ -3,6 +3,7 @@ import { Op } from "sequelize";
 
 import { models } from '../db'
 import {validateFunc, VALIDATION} from "../middlewares/validator";
+import {getLocalizedMessage} from "../utils/localize";
 
 const router = Router()
 
@@ -55,7 +56,7 @@ export default () => {
                     pageSize: limit,
                     exercises: rows,
                 },
-                message: 'List of exercises'
+                message: getLocalizedMessage(req, "exerciseList"),
             });
         } catch (error) {
             next(error);

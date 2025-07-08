@@ -16,8 +16,7 @@ export const registerUserValidation = [
     body("email").isEmail().withMessage("Valid email is required."),
     body("password").isLength({ min: 6 }).withMessage("Password too short. At least 6 characters needed."),
     //body("password").isStrongPassword().withMessage("Password not strong enough."),
-    body("age").optional().isInt({ min: 3 }).withMessage("Age must be a higher than 3 years."),
-    body("age").optional().isInt({ max: 110 }).withMessage("Age must be a lower than 110 years."),
+    body("age").optional().isInt({ min: 3,max:110 }).withMessage("Age must be a higher than 3 years."),
     body("role").optional().isString(),
 ];
 export const idParamValidation = [
