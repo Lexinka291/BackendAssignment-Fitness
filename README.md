@@ -449,7 +449,26 @@ Create new program.
 
 - **Auth:** Yes
 - **Roles allowed:** ADMIN
-
+- 
+#### Example Body
+```
+{
+    "name": "New Program"
+}
+```
+#### Example Response
+```
+{
+    "data": {
+        "id": "6",
+        "name": "New Program",
+        "updatedAt": "2025-07-08T21:38:33.689Z",
+        "createdAt": "2025-07-08T21:38:33.689Z",
+        "deletedAt": null
+    },
+    "message": "Program created successfully"
+}
+```
 ---
 
 ### DELETE `admin/programs/delete/:id`
