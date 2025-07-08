@@ -181,60 +181,60 @@ response status code >= 500
 ### Structure
 ```
 src/
-├──>config/
+├──config/
 │ └── passport.ts
-├── controllers/
+├── controllers/ - Cotrollers used to handle calls to dtb
 │ ├── exerciseController.ts
 │ ├── programController.ts
 │ ├── trackerController.ts
-│ └── userController.ts</span>
-├── db/
+│ └── userController.ts
+├── db/ - Dtbs models
 │ ├── exercise.ts
-│ ├── <span style="color:green">exerciseTracker.ts</span>
+│ ├── exerciseTracker.ts
 │ ├── index.ts
 │ ├── program.ts
-│ └── <span style="color:green">user.ts
-├── locales/
+│ └── user.ts
+├── locales/ - Localization translations
 │ ├── en.json
 │ └── sk.json
-├── middlewares/
+├── middlewares/ - Middlewares to handle authentification, authorization, error messages and validation
 │ ├── authRoles.ts
 │ ├── errorHandler.ts
 │ ├── jwtAuth.ts
 │ └── validator.ts
-├── routes/
-│ ├── admin.ts</span>
+├── routes/ - Routes for USERS - public, Admin - private API and tracker to track users exercises 
+│ ├── admin.ts
 │ ├── exercises.ts
 │ ├── programs.ts
-│ ├── <span style="color:green">test.ts
+│ ├── test.ts
 │ ├── tracker.ts
-│ └── users.ts</span>
+│ └── users.ts
 ├── types/
 │ └── sequelize/
 │ └── index.d.ts
 ├── utils/
 │ ├── enums.ts
-│ ├──<span style="color:green"> localize.ts</span>
-│ └── index.ts 
+│ ├── localize.ts - Localization func
+│──index.ts 
+│──seed.ts 
+│──.env (.gitignore) 
 ```
 ---
 ### Pagination
-
 Pagination to exercise list using query `/exercises?page=1&limit=10`
 
 ### Filter
-
 Filter by program id `/exercises?programID=1`
 
 ### Search
-
 Fulltext search on exercise name `/exercises?search=cis` made with case-insensitive using `Op.iLike` from `"sequelize"`.
+
 ---
 ### Validation
-
 Validation service to check request body, query and params to make sure user sends valid request.
 Validation is handled by function `validateFunc(type: VALIDATION)` inside `validator.ts`.
 Possible cases: **ID validation, Register/Login, Exercise Query, Exercise Creating.**
+
 **Validation Rules**:
 REGISTRATION:
 
@@ -278,6 +278,9 @@ Currently supported languages:
 **sk** - Slovak
 
 Set `Header` to `language` with value `eng` or `sk`
+
+Localization translation are stored in `locale/eng.json` or `locale/sk.json` files.
+
 ---
 ### Error handling
 Error handling for errors with code >= 500.
