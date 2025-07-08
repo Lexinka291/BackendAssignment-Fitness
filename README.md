@@ -167,9 +167,9 @@ response status code >= 500
 
 ***
 
-## ASSIGNMENT DOCUMENTATION
+# Assignment Documentation
 
-### Dependencies
+## Dependencies
 
 - bcrypt
 - express-validator
@@ -178,59 +178,92 @@ response status code >= 500
 - passport-jwt
 - passport-local
 
-### Structure
+---
+
+## Project Structure
+
 ```
 src/
-├──config/
-│ └── passport.ts
-├── controllers/ - Cotrollers used to handle calls to dtb
-│ ├── exerciseController.ts
-│ ├── programController.ts
-│ ├── trackerController.ts
-│ └── userController.ts
-├── db/ - Dtbs models
-│ ├── exercise.ts
-│ ├── exerciseTracker.ts
-│ ├── index.ts
-│ ├── program.ts
-│ └── user.ts
-├── locales/ - Localization translations
-│ ├── en.json
-│ └── sk.json
-├── middlewares/ - Middlewares to handle authentification, authorization, error messages and validation
-│ ├── authRoles.ts
-│ ├── errorHandler.ts
-│ ├── jwtAuth.ts
-│ └── validator.ts
-├── routes/ - Routes for USERS - public, Admin - private API and tracker to track users exercises 
-│ ├── admin.ts
-│ ├── exercises.ts
-│ ├── programs.ts
-│ ├── test.ts
-│ ├── tracker.ts
-│ └── users.ts
+├── config/
+│   └── passport.ts
+├── controllers/                # Controllers to handle DB calls
+│   ├── exerciseController.ts
+│   ├── programController.ts
+│   ├── trackerController.ts
+│   └── userController.ts
+├── db/                         # DB models
+│   ├── exercise.ts
+│   ├── exerciseTracker.ts
+│   ├── index.ts
+│   ├── program.ts
+│   └── user.ts
+├── locales/                    # Localization files
+│   ├── en.json
+│   └── sk.json
+├── middlewares/                # Auth, authorization, errors, validation
+│   ├── authRoles.ts
+│   ├── errorHandler.ts
+│   ├── jwtAuth.ts
+│   └── validator.ts
+├── routes/                     # Public, Admin, User, Tracker routes
+│   ├── admin.ts
+│   ├── exercises.ts
+│   ├── programs.ts
+│   ├── test.ts
+│   ├── tracker.ts
+│   └── users.ts
 ├── types/
-│ └── sequelize/
-│ └── index.d.ts
+│   └── sequelize/
+│       └── index.d.ts
 ├── utils/
-│ ├── enums.ts
-│ ├── localize.ts - Localization func
-│──index.ts 
-│──seed.ts 
-│──.env (.gitignore) 
+│   ├── enums.ts
+│   ├── localize.ts
+│   └── index.ts
+├── seed.ts
+.env        # Environment variables (ignored in git)
 ```
-### ENV file
-Env file shared via e-mail.
----
-### USER API
-All information about users API is inside `src/routes/users.ts` and it is controlled with `src/controller/userController.ts`
-## POST /users/register
-**Description**: Register a new user account
-**Reachable:** http://localhost:8000/users/register
-**Authorization**: Not required
-**Authorized roles**: ALL
 
-**Body for USER**: JSON
+---
+
+## Environment Variables
+
+`.env` file shared separately via email.
+
+---
+
+# API Documentation
+
+All API responses support localization via the HTTP header:
+
+```
+language: en
+```
+
+or
+
+```
+language: sk
+```
+
+Protected endpoints require JWT:
+
+```
+Authorization: Bearer <jwt-token>
+```
+
+---
+
+## USER API
+
+### POST `/users/register`
+
+Register a new user.
+
+- **Auth:** No
+- **Roles allowed:** All
+
+#### Example Request
+
 ```json
 {
   "name": "User",
@@ -242,126 +275,300 @@ All information about users API is inside `src/routes/users.ts` and it is contro
   "role": "USER"
 }
 ```
-**Response** :
-```
-{
-    "data": {
-        "id": "5",
-        "name": "User",
-        "surname": "Smith",
-        "nickName": "user123",
-        "email": "user@example.com",
-        "age": 25,
-        "role": "USER"
-    },
-    "message": "User created successfully"
-}
-```
-**Body for ADMIN**: JSON
+
+#### Example Response
+
 ```json
 {
-  "name": "Alice",
-  "surname": "Smith",
-  "nickName": "alice123",
-  "email": "alice@example.com",
-  "password": "test1234",
-  "age": 25,
-  "role": "ADMIN"
+  "data": {
+    "id": "5",
+    "name": "User",
+    "surname": "Smith",
+    "nickName": "user123",
+    "email": "user@example.com",
+    "age": 25,
+    "role": "USER"
+  },
+  "message": "User created successfully"
 }
 ```
-## POST /users/login
-**Description**: Register a new user account
-**Reachable:** http://localhost:8000/users/register
-**Authorization**: Not required
-**Authorized roles**: ALL
 
-**Body for USER**: JSON
+---
+
+### POST `/users/login`
+
+Login and receive a JWT.
+
+- **Auth:** No
+- **Roles allowed:** All
+
+#### Example Request
+
 ```json
 {
   "email": "user@example.com",
   "password": "test1234"
 }
 ```
-**Response** (201):
+
+#### Example Response
+
 ```json
 {
-    "token": "jwt-token"
+  "token": "jwt-token"
 }
 ```
 
 ---
-### Pagination
-Pagination to exercise list using query `/exercises?page=1&limit=10`
 
-### Filter
-Filter by program id `/exercises?programID=1`
+### GET `/users/`
 
-### Search
-Fulltext search on exercise name `/exercises?search=cis` made with case-insensitive using `Op.iLike` from `"sequelize"`.
+Get a list of public user info.
 
----
-### Validation
-Validation service to check request body, query and params to make sure user sends valid request.
-Validation is handled by function `validateFunc(type: VALIDATION)` inside `validator.ts`.
-Possible cases: **ID validation, Register/Login, Exercise Query, Exercise Creating.**
-
-**Validation Rules**:
-REGISTRATION:
-
-- Required fields validation
-- email
-- password (length)
-- age (min 3 / max 110)
-
-LOGIN:
-
-- email
-- password
-
-EXERCISES:
-
-- name required
-- description
-- programID
-
-QUERIES:
-
-- search
-- programID
-- page
-- limit
-
-PARAMS:
-For id validation:
-
-- id (positive int)
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
 
 ---
 
-### Localization
+### GET `/users/profile`
 
-Localization service to send message attribute in API responses in correct language. Default language is EN, optional is
-SK. User can send all requests with HTTP header language: 'sk' or language: 'en' to receive required language
-localization.
-Currently supported languages:
-**eng** - English
-**sk** - Slovak
+Get profile info of the logged-in user.
 
-Set `Header` to `language` with value `eng` or `sk`
-
-Localization translation are stored in `locale/eng.json` or `locale/sk.json` files.
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
 
 ---
-### Error handling
-Error handling for errors with code >= 500.
-Using `middlewares/errorHandler.ts` with `errorHandler`,
-Printing errors to **console.error()** and writing file to **error.log**.
-With final message sand to user:
-` res.status(500).json({
-        data: {},
-        message: "Something went wrong",
-    });`
 
+### GET `/users/users`
 
+List all users (admin only).
 
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
 
+---
+
+### GET `/users/users/:id`
+
+Get user by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### PUT `/users/users/:id`
+
+Update user by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### DELETE `/users/delete/:id`
+
+Delete user by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+## EXERCISES API
+
+### GET `/exercises`
+
+Get paginated list of exercises.
+
+Supports:
+
+- Pagination: `?page=1&limit=10`
+- Filter by Program: `?programID=1`
+- Search (case-insensitive): `?search=cis`
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
+
+---
+
+### POST `/exercises/add`
+
+Create or update exercise.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+#### Example Body
+
+```json
+{
+  "name": "Push-ups",
+  "description": "Push-up exercise description",
+  "programID": 1
+}
+```
+
+---
+
+### PUT `/exercises/:id`
+
+Update exercise by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### POST `/exercises/:id`
+
+Show exercise by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### POST `/exercises/delete/:id`
+
+Delete exercise by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+## PROGRAMS API
+
+### GET `/programs`
+
+List all programs.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### GET `/programs/:id`
+
+Get program details (and exercises).
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### POST `/programs/add`
+
+Create new program.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### DELETE `/programs/delete/:id`
+
+Delete program (and its exercises).
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### POST `/programs/:id/add`
+
+Add exercise to program.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+### DELETE `/programs/:programId/delete/:exerciseId`
+
+Remove exercise from program.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN
+
+---
+
+## TRACKER API
+
+### GET `/tracker/`
+
+List tracked exercises.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
+
+---
+
+### POST `/tracker/add`
+
+Add tracked exercise.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
+
+---
+
+### DELETE `/tracker/delete/:id`
+
+Delete tracked exercise by ID.
+
+- **Auth:** Yes
+- **Roles allowed:** ADMIN, USER
+
+---
+
+## Validation
+
+Validation logic is handled in `validator.ts` via:
+
+```
+validateFunc(type: VALIDATION)
+```
+
+| Use Case    | Rules |
+|-------------|---------------------------------------------------------|
+| Register    | required fields, email format, password length, age range |
+| Login       | email, password |
+| Exercises   | name required, description, programID |
+| Queries     | search, programID, page, limit |
+| Params      | id must be positive integer |
+
+---
+
+## Localization
+
+Localization via HTTP header:
+
+```
+language: en
+```
+
+or
+
+```
+language: sk
+```
+
+Translations stored in:
+
+- `locales/en.json`
+- `locales/sk.json`
+
+---
+
+## Error Handling
+
+Errors >= 500 logged and return:
+
+```json
+{
+  "data": {},
+  "message": "Something went wrong"
+}
+```
