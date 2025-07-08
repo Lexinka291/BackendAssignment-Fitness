@@ -17,12 +17,28 @@ export default () => {
             // Pagination: /exercises?page=1&limit=10
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
+            //Filter: /exercises?programID=1
+            const programID  = req.params.programID;
+            //Search: /exercises?search=cis
+            const searchValue = req.query.search as string;
 
-
-            // Getting correct starting point
+            // Getting correct starting point for pagination
             const nextPageOffset = (page - 1) * limit;
 
+            // Setting where with filter and search conditions
+            const condition: any = {};
+            if (programID) {
+                condition.programID = programID;
+            }
+            if (searchValue) {
+                condition.name = {
+                    [Op.iLike]: `%${searchValue}%`
+                };
+            }
+
+
             const { count, rows } = await Exercise.findAndCountAll({
+                where: condition,
                 offset: nextPageOffset,
                 limit,
                 include: [{
