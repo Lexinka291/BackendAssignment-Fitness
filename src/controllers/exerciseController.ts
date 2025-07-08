@@ -2,8 +2,6 @@
 
 import {models} from '../db'
 
-
-
 const {
     Program,
     Exercise

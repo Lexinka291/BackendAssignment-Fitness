@@ -6,6 +6,7 @@ import * as userController from "../controllers/userController";
 import * as trackerController from "../controllers/trackerController";
 import * as exerciseController from "../controllers/exerciseController";
 import * as programController from "../controllers/programController";
+import {idParamValidation, validateFunc, VALIDATION} from "../middlewares/validator";
 
 const router = Router();
 export default () => {
@@ -25,7 +26,8 @@ export default () => {
         trackerController.addTracking
     );
     router.delete(
-        '/delete/:trackID',
+        '/delete/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN , USER_ROLES.USER),
         trackerController.deleteTracking

@@ -73,19 +73,19 @@ export const addTracking
         = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
         try {
             const userID = (req.user as any).id;
-            const {trackID} = req.params;
+            const {id} = req.params;
             console.log(userID);
             const user = await User.findByPk(userID);
             if (!user) {
                 return res.status(404).json({message: `User Not Found`});
             }
-            const track = await  ExerciseTracker.findOne({where: {id:trackID}});
+            const track = await  ExerciseTracker.findOne({where: {id:id}});
             if (!track) {
                 return res.status(404).json({message: `Track Not Found`});
             }
             await track.destroy();
             res.json({
-                message: `Track ${trackID} deleted from user ${userID}`
+                message: `Track ${id} deleted from user ${userID}`
             });
 
         } catch (err) {

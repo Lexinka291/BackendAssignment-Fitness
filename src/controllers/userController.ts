@@ -1,5 +1,6 @@
 ﻿import {Request, Response, NextFunction} from 'express'
 import jwt from 'jsonwebtoken'
+import { query, validationResult } from "express-validator";
 
 import {models} from '../db'
 import bcrypt from "bcrypt";

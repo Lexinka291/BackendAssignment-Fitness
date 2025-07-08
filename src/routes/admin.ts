@@ -5,6 +5,13 @@ import { jwtAuth } from '../middlewares/jwtAuth';
 import * as userController from "../controllers/userController";
 import * as exerciseController from "../controllers/exerciseController";
 import * as programController from "../controllers/programController";
+import {
+    createOrUpdateExerciseValidation,
+    idParamValidation,
+    validate,
+    validateFunc,
+    VALIDATION
+} from '../middlewares/validator';
 
 
 
@@ -23,12 +30,14 @@ export default () => {
     // Get User by ID
     router.get(
         "/users/:id",
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles("ADMIN"),
         userController.getUserByID
     );
     router.delete(
         '/delete/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         userController.deleteUserByID
@@ -37,6 +46,7 @@ export default () => {
     // Update user by ID
     router.put(
         '/users/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         userController.updateUserByID
@@ -46,6 +56,7 @@ export default () => {
     // Create new exercise or if exists - update it
     router.post(
         '/exercises/add',
+        createOrUpdateExerciseValidation,
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         exerciseController.createOrUpdateExercise
@@ -54,6 +65,7 @@ export default () => {
     // Update exercise
     router.put(
         '/exercises/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         exerciseController.updateExercise
@@ -62,6 +74,7 @@ export default () => {
     // Show exercise
     router.post(
         '/exercises/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         exerciseController.showExercise
@@ -70,6 +83,7 @@ export default () => {
     // Delete exercise
     router.post(
         '/exercises/delete/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         exerciseController.deleteExercise
@@ -86,6 +100,7 @@ export default () => {
     // Get program data and exercises
     router.get(
         '/programs/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         programController.getProgramByID
@@ -100,6 +115,7 @@ export default () => {
     // Delete program data and its exercises
     router.delete(
         '/programs/delete/:id',
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         programController.deleteProgram
@@ -107,6 +123,7 @@ export default () => {
     // Add exercise to the program
     router.post(
         "/programs/:id/add",
+        validateFunc(VALIDATION.ID),
         jwtAuth(),
         authorizeRoles(USER_ROLES.ADMIN),
         programController.addExerciseToProgram

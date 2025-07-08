@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 import { Op } from "sequelize";
 
 import { models } from '../db'
+import {validateFunc, VALIDATION} from "../middlewares/validator";
 
 const router = Router()
 
@@ -11,7 +12,7 @@ const {
 } = models
 
 export default () => {
-    router.get('/', async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    router.get('/', validateFunc(VALIDATION.EXERCISE_QUERY),async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try {
             // Extract query params
             // Pagination: /exercises?page=1&limit=10
