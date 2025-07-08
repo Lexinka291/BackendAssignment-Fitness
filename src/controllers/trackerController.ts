@@ -13,7 +13,6 @@ export const getTrackedExercises
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
     try {
         const userID = (req.user as any).id;
-        console.log(userID);
         const user = await User.findByPk(userID);
         if (!user) {
             return res.status(404).json({message: `User Not Found`});
@@ -35,8 +34,8 @@ export const getTrackedExercises
             message: "List of public user info",
         })
     } catch (err) {
-        console.log(err)
-        return res.status(500).json({message: err.message});
+        _next(err)
+
     }
 
 }
@@ -65,8 +64,7 @@ export const addTracking
             message: 'Tracking created successfully',
         });
     } catch (err) {
-        console.log(err)
-        return res.status(500).json({message: err.message});
+        _next(err)
     }
 }
     export const deleteTracking
@@ -74,7 +72,6 @@ export const addTracking
         try {
             const userID = (req.user as any).id;
             const {id} = req.params;
-            console.log(userID);
             const user = await User.findByPk(userID);
             if (!user) {
                 return res.status(404).json({message: `User Not Found`});
@@ -89,8 +86,8 @@ export const addTracking
             });
 
         } catch (err) {
-            console.log(err)
-            return res.status(500).json({message: err.message});
+            _next(err)
+
         }
 
     }

@@ -11,6 +11,7 @@ import AdminRouter from './routes/admin'
 import TrackerRouter from './routes/tracker'
 import * as dotenv from "dotenv"
 import passport from './config/passport'
+import {errorHandler} from "./middlewares/errorHandler";
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ app.use('/users', UserRouter())
 app.use('/admin', AdminRouter())
 app.use('/test', TestRouter());
 app.use('/tracker', TrackerRouter());
-
+app.use(errorHandler)
 const httpServer = http.createServer(app)
 
 try {

@@ -22,12 +22,8 @@ export const createProgram =
                 data: program,
                 message: 'Program created successfully',
             });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                message: 'Error creating new program',
-                error: error instanceof Error ? error.message : String(error),
-            });
+        } catch (err) {
+            _next(err)
         }
     }
 export const deleteProgram
@@ -50,9 +46,8 @@ export const deleteProgram
         });
 
         res.json({message: `Program ${id} deleted`});
-    } catch (err: any) {
-        console.error(err);
-        res.status(500).json({message: "Error deleting exercise"});
+    } catch (err) {
+        _next(err)
     }
 };
 export const getAllPrograms
@@ -64,9 +59,9 @@ export const getAllPrograms
             data: program,
             message: 'List of programs',
         });
-    } catch (err: any) {
-        console.error(err);
-        res.status(500).json({ message: "Error getting list of program" });
+    } catch (err) {
+        _next(err)
+
     }
 };
 export const getProgramByID
@@ -88,9 +83,9 @@ export const getProgramByID
             data: data,
             message: 'Program created successfully',
         });
-    } catch (err: any) {
-        console.error(err);
-        res.status(500).json({ message: "Error getting program" });
+    } catch (err) {
+        _next(err)
+
     }
 };
 
@@ -110,12 +105,8 @@ export const addExerciseToProgram
             data: newExercise,
             message: `Exercise added to program ${id}`
         });
-    } catch (error: any) {
-        console.error(error);
-        res.status(500).json({
-            message: "Error adding exercise",
-            error: error.message
-        });
+    } catch (err) {
+        _next(err)
     }
 };
 export const deleteExercise
@@ -139,11 +130,7 @@ export const deleteExercise
         res.json({
             message: `Exercise ${exerciseId} deleted from program ${programId}`
         });
-    } catch (error: any) {
-        console.error(error);
-        res.status(500).json({
-            message: "Error deleting exercise",
-            error: error.message
-        });
+    } catch (err) {
+        _next(err)
     }
 };

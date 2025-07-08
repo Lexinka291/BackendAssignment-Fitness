@@ -16,7 +16,6 @@ const {
 
 export const getPublicUsersInfo
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
-    console.log("Route handler running...");
     // Get id and nickname
     const users = await User.findAll({
         attributes: ["id", "nickName"],
@@ -29,7 +28,6 @@ export const getPublicUsersInfo
 
 export const getUsers
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
-    console.log("Route handler running...");
     const users = await User.findAll();
     res.json({
         data: users,
@@ -48,9 +46,10 @@ export const getUserByID =
             res.json({
                 data: profileData,
                 message: `Getting user ${user.id}`,
-            });        } catch (err: any) {
-            console.error(err);
-            res.status(500).json({message: "Error fetching user", error: err.message});
+            });        }
+        catch (err) {
+            _next(err);
+
         }
     };
 
@@ -115,10 +114,9 @@ export const getProfile
             },
             message: "Profile data of logged user"
         });
-    } catch (err: any) {
-        console.error(err);
-        return res
-            .json({message: "Error getting user profile", error: err.message});
+    } catch (err) {
+        _next(err);
+
     }}
 
 export const updateUserByID
@@ -162,10 +160,9 @@ export const updateUserByID
             data: user,
             message: `Updated user ${id} data`,
         });
-    } catch (err: any) {
-        console.error(err);
-        return res
-            .json({message: "Error updating user", error: err.message});
+    } catch (err) {
+        _next(err);
+
     }}
 export const register
     = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
@@ -208,27 +205,24 @@ export const register
             age: newUser.age,
             role: newUser.role,
         });
-    } catch (err: any) {
-        console.error(err);
-        return res
-            .status(500)
-            .json({message: "Error creating user", error: err.message});
+    } catch (err) {
+        _next(err);
     }
 };
 
 export const login
-    = async (req: Request, res: Response, next: NextFunction) => {
+    = async (req: Request, res: Response, _next: NextFunction): Promise<any> => {
     try {
         const {email, password} = req.body
 
         const user = await User.findOne({where: {email}})
         if (!user) {
-            res.status(401).json({message: 'Invalid credentials'})
+            return res.status(401).json({message: 'Invalid credentials'})
         }
 
         const match = await bcrypt.compare(password, user.password)
         if (!match) {
-            res.status(401).json({message: 'Invalid credentials'})
+            return res.status(401).json({message: 'Invalid credentials'})
         }
 
         const token = jwt.sign(
@@ -243,8 +237,7 @@ export const login
 
         res.json({token})
     } catch (err) {
-        console.error(err)
-        next(err)
+        _next(err);
     }
 };
 
@@ -262,8 +255,7 @@ export const deleteUserByID
             return res.status(404).json({message: 'User not found'})
         }
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({message: 'Error deleting user'})
+        _next(err);
     }
 }
 

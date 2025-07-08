@@ -2,11 +2,8 @@
 import {authorizeRoles} from "../middlewares/authRoles";
 import {USER_ROLES} from "../utils/enums";
 import { jwtAuth } from '../middlewares/jwtAuth';
-import * as userController from "../controllers/userController";
 import * as trackerController from "../controllers/trackerController";
-import * as exerciseController from "../controllers/exerciseController";
-import * as programController from "../controllers/programController";
-import {idParamValidation, validateFunc, VALIDATION} from "../middlewares/validator";
+import {validateFunc, VALIDATION} from "../middlewares/validator";
 
 const router = Router();
 export default () => {
@@ -32,7 +29,6 @@ export default () => {
         authorizeRoles(USER_ROLES.ADMIN , USER_ROLES.USER),
         trackerController.deleteTracking
     )
-
 
     return router
 }

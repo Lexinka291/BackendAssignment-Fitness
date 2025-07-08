@@ -15,10 +15,9 @@ export const createOrUpdateExercise =
 
             const program = await Program.findByPk(programID);
             if (!program) {
-                res.status(400).json({
+                return res.status(400).json({
                     message: 'Program not found.',
                 });
-                return;
             }
 
             // Check if there is exercise with the same name within the same program
@@ -53,12 +52,8 @@ export const createOrUpdateExercise =
                 data: exercise,
                 message: 'Exercise created successfully',
             });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                message: 'Error creating new exercise',
-                error: error instanceof Error ? error.message : String(error),
-            });
+        } catch (err) {
+            _next(err)
         }
     }
 
@@ -75,9 +70,8 @@ export const updateExercise =
 
             await exercise.update({ name ,difficulty, programID});
             res.json(exercise);
-        } catch (err: any) {
-            console.error(err);
-            res.status(500).json({ message: "Error updating exercise" });
+        } catch (err) {
+            _next(err)
         }
     };
 
@@ -91,9 +85,9 @@ export const deleteExercise
             return res.status(404).json({message: "Exercise not found"});
         }
         res.json({message: `Exercise ${id} deleted`});
-    } catch (err: any) {
-        console.error(err);
-        res.status(500).json({message: "Error deleting exercise"});
+    } catch (err) {
+        _next(err)
+
     }
 };
 export const showExercise
@@ -105,8 +99,7 @@ export const showExercise
             return res.status(404).json({ message: "Exercise not found" });
         }
         res.json(exercise);
-    } catch (err: any) {
-        console.error(err);
-        res.status(500).json({ message: "Error getting exercise" });
+    } catch (err) {
+        _next(err)
     }
 };
