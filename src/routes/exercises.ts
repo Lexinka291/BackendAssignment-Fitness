@@ -13,7 +13,8 @@ export default () => {
 	router.get('/', async (_req: Request, res: Response, _next: NextFunction): Promise<any> => {
 		const exercises = await Exercise.findAll({
 			include: [{
-				model: Program
+				model: Program,
+                as: 'program',
 			}]
 		})
 

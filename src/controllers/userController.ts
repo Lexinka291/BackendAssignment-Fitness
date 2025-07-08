@@ -7,7 +7,10 @@ import {UserModel} from "../db/user";
 
 
 const {
-    User
+    User,
+    ExerciseTracker,
+    Exercise,
+    Program
 } = models
 
 export const getPublicUsersInfo
@@ -67,20 +70,56 @@ export const getProfile
     try {
 
     const userID = (req.user as any).id;
-    const user = await User.findByPk(userID);
-    if (!user) {
-        return res.status(404).json({message: "User not found'})"})
-    }
-    const profileData = GetUserDetails(user)
-    res.json({
-        data: profileData,
-        message: "Profile data of logged user",
-    });
+        // Get user data
+        const user = await User.findByPk(userID);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const profileData = GetUserDetails(user);
+
+        // Get all exercise trackers
+        const trackers = await ExerciseTracker.findAll({
+            where: {
+                userID: userID
+            },
+            include: [
+                {
+                    model: Exercise,
+                    attributes: ['name'],
+                }
+            ],
+            attributes: [
+                'id',
+                'exerciseID',
+                'completedAt',
+                'durationSeconds'
+            ]
+        });
+
+        // Map the trackers
+        const completedExercises = trackers.map((tracker: any) => ({
+            trackID: tracker.id,
+            exerciseID: tracker.exerciseID,
+            exerciseName: tracker.exercise?.name || null,
+            completedAt: tracker.completedAt,
+            durationSeconds: tracker.durationSeconds
+        }));
+
+        res.json({
+            data: {
+                profileData,
+                completedExercises
+            },
+            message: "Profile data of logged user"
+        });
     } catch (err: any) {
         console.error(err);
         return res
             .json({message: "Error getting user profile", error: err.message});
     }}
+
 export const updateUserByID
     = async (req: any, res: Response, _next: NextFunction): Promise<any> => {
     async function GetReqBodyUpdates() {

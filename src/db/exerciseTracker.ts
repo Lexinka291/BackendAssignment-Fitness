@@ -1,12 +1,14 @@
 ﻿import { Sequelize, DataTypes, Model } from 'sequelize'
+import {ExerciseModel} from "./exercise";
+import {UserModel} from "./user";
 
 export interface ExerciseTrackerModel extends Model {
     id: number
     completedAt : Date;
     durationSeconds: number;
 
-    userID: number
-    exerciseID: number
+    user: UserModel
+    exercise: ExerciseModel
 }
 
 

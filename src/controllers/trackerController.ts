@@ -5,6 +5,7 @@ import {models} from '../db'
 const {
     User,
     ExerciseTracker,
+    Program,
     Exercise
 } = models
 
