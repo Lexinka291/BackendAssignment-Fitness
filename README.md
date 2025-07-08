@@ -219,6 +219,76 @@ src/
 │──seed.ts 
 │──.env (.gitignore) 
 ```
+### ENV file
+Env file shared via e-mail.
+---
+### USER API
+All information about users API is inside `src/routes/users.ts` and it is controlled with `src/controller/userController.ts`
+## POST /users/register
+**Description**: Register a new user account
+**Reachable:** http://localhost:8000/users/register
+**Authorization**: Not required
+**Authorized roles**: ALL
+
+**Body for USER**: JSON
+```json
+{
+  "name": "User",
+  "surname": "Smith",
+  "nickName": "user123",
+  "email": "user@example.com",
+  "password": "test1234",
+  "age": 25,
+  "role": "USER"
+}
+```
+**Response** :
+```
+{
+    "data": {
+        "id": "5",
+        "name": "User",
+        "surname": "Smith",
+        "nickName": "user123",
+        "email": "user@example.com",
+        "age": 25,
+        "role": "USER"
+    },
+    "message": "User created successfully"
+}
+```
+**Body for ADMIN**: JSON
+```json
+{
+  "name": "Alice",
+  "surname": "Smith",
+  "nickName": "alice123",
+  "email": "alice@example.com",
+  "password": "test1234",
+  "age": 25,
+  "role": "ADMIN"
+}
+```
+## POST /users/login
+**Description**: Register a new user account
+**Reachable:** http://localhost:8000/users/register
+**Authorization**: Not required
+**Authorized roles**: ALL
+
+**Body for USER**: JSON
+```json
+{
+  "email": "user@example.com",
+  "password": "test1234"
+}
+```
+**Response** (201):
+```json
+{
+    "token": "jwt-token"
+}
+```
+
 ---
 ### Pagination
 Pagination to exercise list using query `/exercises?page=1&limit=10`
